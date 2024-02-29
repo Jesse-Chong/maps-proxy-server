@@ -37,6 +37,7 @@ router.get('/places', async (req, res) => {
 
 });
 
+// **** this is solely to grab data from the api to populate postgres table
 // backend
 router.get('/placeDetails', async (req, res) => {
     const url = 'https://maps.googleapis.com/maps/api/place/details/json';
@@ -67,10 +68,10 @@ router.get('/placeDetails', async (req, res) => {
       // Insert placeDetailsArray into the database
       await insertPlaceDetailsArrayToDatabase(placeDetailsArray);
   
-      res.json({ message: 'Place details inserted successfully' });
+      res.json({ success: true, message: 'Place details inserted successfully' });
     } catch (error) {
-      console.error('Error fetching and inserting place details:', error);
-      res.status(500).json({ message: error.message });
+      console.error('Error:', error.message);
+      res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
   });
 
@@ -138,3 +139,23 @@ const insertPlaceDetailsArrayToDatabase = async (placeDetailsArray) => {
   };
 
 module.exports = router;
+
+// **** this is to show info window info
+// router.get('/placeDetails', async (req, res) => {
+//     const url = 'https://maps.googleapis.com/maps/api/place/details/json'
+  
+//     try {
+//       const result = await axios.get(url, {
+//         params: {
+//         key: API_KEY,
+//         ...req.query 
+//         }
+//       });
+//       res.json(result.data);
+//       console.log(result.data);
+  
+//     } catch (error) {
+//       res.status(500).json({message: error.message}); 
+//     }
+//   })
+//   module.exports = router;
